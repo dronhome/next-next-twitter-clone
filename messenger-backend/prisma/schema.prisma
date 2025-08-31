@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  from      String
+  to        String
+  text      String
+  timestamp DateTime @default(now())
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  content   String
+  
+  postId    String
+  userId    String
+
+  parentId  Int?
+  parent    Comment?  @relation("Replies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("Replies")
+
+  createdAt DateTime  @default(now())
+}
+
+model Following {
+  userId String
+  followerId String
+
+  createdAt DateTime  @default(now())
+
+  @@unique([userId, followerId])
+  @@index([userId])
+  @@index([followerId])
+}
+

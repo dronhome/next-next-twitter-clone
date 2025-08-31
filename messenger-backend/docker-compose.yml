@@ -1,0 +1,15 @@
+services:
+  mysql:
+    image: mysql:8.0.32
+    container_name: messenger_mysql
+    restart: always
+    command: ["mysqld", "--default-authentication-plugin=mysql_native_password"]
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: messenger_db
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppassword
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./mysql-data:/var/lib/mysql
